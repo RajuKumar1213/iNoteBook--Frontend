@@ -1,10 +1,12 @@
 import React from 'react'
+import Note from './Note';
 
 const Home = () => {
+
   return (
-    <div>
-      this is home
-    </div>
+    <>
+     <Note/>
+    </>
   )
 }
 
