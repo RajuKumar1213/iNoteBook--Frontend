@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { Link, useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import NoteContext from '../context/notes/NoteContext';
 
 const Login = () => {
@@ -7,10 +7,11 @@ const Login = () => {
   const { showAlert } = context
 
   const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const [passwordType, setPasswordType] = useState("password");
   const history = useHistory(null);
 
   /// handling login after click on the button
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // API CALL :
@@ -29,7 +30,7 @@ const Login = () => {
       // save the auth token and redirect to the home page
       localStorage.setItem("token", json.authToken);
       history.push("/");
-      showAlert("success", "Login Successfully..!");
+      showAlert("success", "Logged In Successfully..!");
 
     }
     else {
@@ -41,9 +42,18 @@ const Login = () => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value })
   }
 
+  const togglePasswordType = () => {
+    if (passwordType === "password") {
+      setPasswordType("text");
+    }
+    else {
+      setPasswordType("password");
+    }
+  }
+
 
   return (
-   
+
     <section className="vh-100">
       <div className="container py-5 h-100">
         <div className="row d-flex align-items-center justify-content-center h-100">
@@ -52,20 +62,32 @@ const Login = () => {
               className="img-fluid" alt="login phone img" />
           </div>
           <div className="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
-            <form>
-              <h1 className='text-center mb-3'> Login </h1>
+            <form onSubmit={handleSubmit}>
+              <h1 className=' mb-3'> Login </h1>
               <div className="form-outline mb-4">
-                <input type="email" id="email" className="form-control form-control-lg" />
-                <label className="form-label" htmlFor="email" name="email" value={loginData.email} onChange={onChange}>Email address</label>
+                <input type="email" id="email" className="form-control form-control-lg" name="email" value={loginData.email} onChange={onChange} required />
+                <label className="form-label" htmlFor="email" >Email address</label>
               </div>
 
               <div className="form-outline mb-4">
-                <input type="password" id="password" className="form-control form-control-lg" />
-                <label className="form-label" htmlFor="password" name="password" onChange={onChange} value={loginData.password}>Password</label>
-              </div>
-              <button type="submit" className="btn btn-primary btn-lg btn-block text-center" onClick={handleLogin}> Login</button>
+                <input type={passwordType} id="password" className="form-control form-control-lg d-inline" name="password" value={loginData.password} onChange={onChange} required minLength={5} />
+                <label className="form-label" htmlFor="password" >Password</label>
 
+                <div style={{height : "12px"}}>
+                  <div className={`form-check ${loginData.password.length === 0 ? "d-none" : "d-block"}`}>
+                    <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" onClick={togglePasswordType} />
+                    <label className="form-check-label" htmlFor="flexCheckDefault">
+                      See Password
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="d-flex mb-2 mb-lg-2">
+                <button type="submit" className="btn btn-primary btn-lg" >Login</button>
+              </div>
             </form>
+            <p className='my-2'>Not a member? <Link to="signup">Register</Link></p>
           </div>
         </div>
       </div>

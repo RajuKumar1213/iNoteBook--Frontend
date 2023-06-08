@@ -4,6 +4,9 @@ import NoteContext from '../context/notes/NoteContext';
 const Alert = () => {
     
     const Captalize = (word) => {
+        if(word === "danger"){
+            word = "error";
+        }
         return word.charAt(0).toUpperCase() + word.slice(1);
     }
 

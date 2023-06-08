@@ -5,12 +5,12 @@ import AddNote from './AddNote';
 
 const Note = () => {
   const context = useContext(NoteContext);
-  const { notes , editNote , showAlert} = context
+  const { notes, editNote, showAlert } = context
   const [note, setNote] = useState({ id: "", etitle: "", edescription: "", etag: "" })
 
   const updateNote = (currentNote) => {
     ref.current.click();
-    setNote({id : currentNote._id ,etitle : currentNote.title , edescription : currentNote.description , etag : currentNote.tag});
+    setNote({ id: currentNote._id, etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag });
   }
 
   const ref = useRef(null);
@@ -22,10 +22,10 @@ const Note = () => {
   }
 
   const handleClick = () => {
-    editNote(note.id , note.etitle , note.edescription , note.etag);
-    showAlert("success" , "Note is updated successfully !")
+    editNote(note.id, note.etitle, note.edescription, note.etag);
+    showAlert("success", "Note is updated successfully !")
     refClose.current.click();
-}
+  }
 
   return (
     <>
@@ -50,11 +50,11 @@ const Note = () => {
               </div>
               <div className="mb-3">
                 <label htmlFor="edescription" className="form-label">description</label>
-                <input type='text' className="form-control" id="edescription" name='edescription'  value={note.edescription} onChange={handleChange} />
+                <input type='text' className="form-control" id="edescription" name='edescription' value={note.edescription} onChange={handleChange} />
               </div>
               <div className="mb-3">
                 <label htmlFor="etag" className="form-label">Tag</label>
-                <input type='text' className="form-control" id="etag" name='etag'  value={note.etag} onChange={handleChange} />
+                <input type='text' className="form-control" id="etag" name='etag' value={note.etag} onChange={handleChange} />
               </div>
             </div>
 
@@ -68,11 +68,13 @@ const Note = () => {
 
       <div className="container my-3">
         <h2>Your Notes</h2>
-        <div className='row'>
+
+         <div className='row'>
           {notes.map(note => {
             return <NoteItem key={note._id} note={note} updateNote={updateNote} />
           })}
-        </div>
+        </div> 
+
       </div>
     </>
   )

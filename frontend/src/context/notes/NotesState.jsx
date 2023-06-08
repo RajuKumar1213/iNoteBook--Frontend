@@ -2,6 +2,7 @@ import React, {  useState } from 'react'
 import NoteContext from './NoteContext'
 
 const NoteState = (props) => {
+
   const host = "http://localhost:5000"
   const initialNotes = []
 
@@ -13,10 +14,9 @@ const NoteState = (props) => {
      const response = await fetch(`${host}/api/notes/fetchallnotes`, {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
-        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ2ZjJjMjI5YjIwMTViNTllMjE4YjkzIn0sImlhdCI6MTY4NTAwNzM5NH0.3AsZnL3DwskTTZiiSqhgso4HsJ3gTj_dLsXYwFCLZHU"
-      },
-      // body: JSON.stringify({title , description , tag}),
+        "Content-Type": "application-json",
+        "auth-token" : localStorage.getItem("token")
+      }
     });
     const json =await response.json();
     console.log(json);
@@ -31,7 +31,7 @@ const NoteState = (props) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ2ZjJjMjI5YjIwMTViNTllMjE4YjkzIn0sImlhdCI6MTY4NTAwNzM5NH0.3AsZnL3DwskTTZiiSqhgso4HsJ3gTj_dLsXYwFCLZHU"
+        "auth-token": localStorage.getItem("token")
       },
       body: JSON.stringify({title , description , tag}),
     });
@@ -50,7 +50,7 @@ const NoteState = (props) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ2ZjJjMjI5YjIwMTViNTllMjE4YjkzIn0sImlhdCI6MTY4NTAwNzM5NH0.3AsZnL3DwskTTZiiSqhgso4HsJ3gTj_dLsXYwFCLZHU"
+        "auth-token": localStorage.getItem("token") 
       },
      
     });
@@ -69,7 +69,7 @@ const NoteState = (props) => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ2ZjJjMjI5YjIwMTViNTllMjE4YjkzIn0sImlhdCI6MTY4NTAwNzM5NH0.3AsZnL3DwskTTZiiSqhgso4HsJ3gTj_dLsXYwFCLZHU"
+        "auth-token": localStorage.getItem("token")
       },
       body: JSON.stringify({title , description , tag}),
     });
@@ -96,6 +96,7 @@ const NoteState = (props) => {
   const [alert, setAlert] = useState(null);
 
   const showAlert = (messageType, message) => {
+
       setAlert({ messageType: messageType, message: message })
       setTimeout(() => {
         setAlert(null);
@@ -103,8 +104,28 @@ const NoteState = (props) => {
 
   }
 
+  // //Get the user .
+
+  const [user ,setUser] = useState("");
+
+  const getUser = async () => {
+    // API CALL :
+
+    const response = await fetch(`${host}/api/auth/getuser/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token": localStorage.getItem("token")
+      }
+    });
+    const userJson = await response.json();
+    setUser(userJson);
+    // console.log(foundUser)
+  }
+
+
   return (
-    <NoteContext.Provider value={{ notes, addNote, deleteNote, showAlert, alert , fecthAllNotes ,editNote}}>
+    <NoteContext.Provider value={{ notes, addNote, deleteNote, showAlert, alert , fecthAllNotes ,editNote , getUser , user}}>
       {props.children}
     </NoteContext.Provider>
   )

@@ -1,18 +1,23 @@
 import React, { useContext, useEffect, useState } from 'react'
 import NoteContext from '../context/notes/NoteContext';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 
 
 const AddNote = () => {
-
-
-
     const context = useContext(NoteContext);
-    const { addNote , fecthAllNotes , showAlert } = context
+    const { addNote , fecthAllNotes , showAlert , getUser } = context
+    const history = useHistory();
 
     ///show all notes before adding by using useEffect hook it will run only for once
     useEffect(() => {
-        fecthAllNotes();
+        if(localStorage.getItem("token")){
+            fecthAllNotes();
+            getUser();
+        }
+        else {
+            history.push("/login");
+        }
         // eslint-disable-next-line
       }, []);
 
@@ -22,17 +27,18 @@ const AddNote = () => {
         setNote({...note , [e.target.name] : e.target.value})
     }
     const handleClick = (e) => {
+        e.preventDefault();
         addNote(note.title , note.description , note.tag );
         
         if(note.title.length === 0 && note.description.length === 0){
-            showAlert("warning" , "Please Enter some text....!");
+            showAlert("danger" , "Please Enter some text....!");
             
         }
         else if(note.title.length === 0 ){
-        showAlert("warning" , "Title filed should not be blank. Please Enter some text...");
+        showAlert("danger" , "Title filed should not be blank. Please Enter some text...");
         }
         else if(note.description.length === 0 ){
-            showAlert("warning" , "Description filed should not be blank. Please Enter some text...");
+            showAlert("danger" , "Description filed should not be blank. Please Enter some text...");
         }
         else {
             showAlert("success" , "Item added successfully");
@@ -42,8 +48,8 @@ const AddNote = () => {
     }
 
     return (
-        <div>
-            <div className="container my-3">
+        <div style={{marginTop : "70px"}}>
+            <div className="container">
                 <h2>Add Notes</h2>
                 <div className="mb-3">
                     <label htmlFor="title" className="form-label">Title</label>
